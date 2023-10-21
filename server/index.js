@@ -15,7 +15,7 @@ const io = new Server(3001, {
 await connectToDB();
 
 io.on("connection", (socket) => {
-  console.log("Connected to the server.", socket.id);
+  console.log("Connected:", socket.id);
   socket.on("get-document", async (documentID, userID) => {
     const doc = await findOrCreateDocument(documentID, userID);
     socket.join(documentID);
