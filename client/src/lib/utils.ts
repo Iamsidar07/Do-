@@ -6,7 +6,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 dayjs.extend(relativeTime);
-const baseUrl = "http://localhost:3001";
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
