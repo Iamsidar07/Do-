@@ -1,4 +1,6 @@
 import { connect } from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
 const config = {
   mongoDBUri: String(process.env.MONGODB_URI),
@@ -7,8 +9,10 @@ const config = {
 export const connectToDB = async () => {
   try {
     await connect(config.mongoDBUri, {});
+    console.log("Connected to the database.");
   } catch (error) {
-    console.log("Failed to connect to Database.", error);
+    console.error("Failed to connect to the Database.", error);
+    throw new Error("Failed to connect to the Database.");
   }
 };
 

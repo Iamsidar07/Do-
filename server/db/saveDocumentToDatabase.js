@@ -2,13 +2,24 @@ import Document from "../Schema/Document.js";
 
 export const saveDocumentToDatabase = async (documentID, data, title) => {
   try {
-    console.log(typeof Date.now());
-    await Document.findByIdAndUpdate(documentID, {
-      data,
-      title,
-    });
-    console.log("Saved changes to DB.", data);
+    const document = await Document.findOne({ id: documentID });
+    if (!document) return "document not found";
+    await Document.findOneAndUpdate(
+      { id: documentID },
+      {
+        data,
+        title,
+      },
+    );
+    return {
+      isError: false,
+      isSuccess: true,
+    };
   } catch (error) {
-    console.log("Failed to save changes into the database.", error);
+    console.error("Failed to save changes into the database.", error);
+    return {
+      isError: true,
+      isSuccess: false,
+    };
   }
 };

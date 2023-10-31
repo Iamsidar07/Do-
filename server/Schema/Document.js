@@ -4,24 +4,24 @@ const DocumentSchema = new Schema(
   {
     id: {
       type: String,
-      require: [true, "id is required"],
+      unique: true,
+      required: [true, "id is required"],
     },
     title: {
       type: String,
-      require: [true, "title is required"],
+      required: [true, "title is required"],
       default: "Untitled document",
     },
     data: {
-      type: Object,
-      require: [true, "data is required"],
+      type: String,
+      required: [true, "data is required"],
     },
-    creator: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+    userId: {
+      type: String,
     },
   },
   {
-    timestamp: true,
+    timestamps: true,
   },
 );
 
