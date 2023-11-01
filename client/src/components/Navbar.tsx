@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Input } from "./ui/input";
-import { Button, buttonVariants } from "./ui/button";
+import { Button } from "./ui/button";
 import { LogOutIcon, Search } from "lucide-react";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import {
@@ -57,8 +57,8 @@ const Navbar = () => {
                     {user.given_name
                       ? user.given_name[0]
                       : user.family_name
-                      ? user.family_name[0]
-                      : "U"}
+                        ? user.family_name[0]
+                        : "U"}
                   </AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
