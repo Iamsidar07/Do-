@@ -45,7 +45,6 @@ export default function Root() {
     enabled: Boolean(q && userId),
   });
 
-
   const {
     data,
     error,
@@ -56,7 +55,9 @@ export default function Root() {
     queryKey: ["documents", userId],
     queryFn: async ({ pageParam = 0 }) => {
       const offset = pageParam ? pageParam : 0;
-      const url = `${import.meta.env.VITE_API_BASE_URL}/all?userId=${userId}&offset=${offset}&limit=${INIFINITE_QUERY_LIMIT}`;
+      const url = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/all?userId=${userId}&offset=${offset}&limit=${INIFINITE_QUERY_LIMIT}`;
       const data = await axios.get(url);
       return {
         results: data.data.results,

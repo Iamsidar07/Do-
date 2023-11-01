@@ -32,7 +32,7 @@ const Navbar = () => {
         <Link to={"/"}>Do 📂</Link>
         <form
           onSubmit={handleSearchSubmit}
-          className="flex items-stretch gap-2 md:w-full max-w-lg "
+          className="hidden sm:flex items-stretch gap-2 md:w-full max-w-lg "
         >
           <Input
             id="name"
@@ -57,8 +57,8 @@ const Navbar = () => {
                     {user.given_name
                       ? user.given_name[0]
                       : user.family_name
-                        ? user.family_name[0]
-                        : "U"}
+                      ? user.family_name[0]
+                      : "U"}
                   </AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
@@ -79,10 +79,7 @@ const Navbar = () => {
           </>
         ) : (
           <div className="flex items-stretch gap-2">
-            <Button className={buttonVariants({
-              size: "sm",
-              variant: "secondary"
-            })} onClick={async () => await login({})}>login</Button>
+            <Button onClick={async () => await login({})}>login</Button>
             <Button onClick={async () => await register({})}>register</Button>
           </div>
         )}
