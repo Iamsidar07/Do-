@@ -28,7 +28,7 @@ export default function Document() {
   );
 
 
-  const [,setIsSocketConnected] = useState(socket?.connected);
+  const [, setIsSocketConnected] = useState(socket?.connected);
   useEffect(() => {
     if (!socket) return;
     function onConnect() {
@@ -72,26 +72,6 @@ export default function Document() {
     return () => { socket.off("save-document-response", onSaveDocumentResponse); }
   }, []);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (!isSocketConnected) return;
-  //     if (
-  //       prevContentRef.current !== content ||
-  //       prevTitleRef.current !== documentTitle
-  //     ) {
-  //       console.log("emiited save:");
-  //       socket.emit("save-document", {
-  //         title: documentTitle ?? "Untitled",
-  //         data: content,
-  //       });
-  //       prevContentRef.current = content;
-  //       prevTitleRef.current = documentTitle;
-  //     }
-  //   }, 2500);
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, [content, documentTitle, isSocketConnected]);
 
   useEffect(() => {
     if (window) {
@@ -99,7 +79,7 @@ export default function Document() {
     }
   }, []);
 
-  const debounce = function (cb: { (): void; (arg0: unknown[]): void; }, delay=1000) {
+  const debounce = function (cb: { (): void; (arg0: unknown[]): void; }, delay = 500) {
     let timeout: NodeJS.Timeout | undefined;
     return function (...args: unknown[]) {
       clearTimeout(timeout)
@@ -113,7 +93,7 @@ export default function Document() {
     socket.emit("save-document", { title: documentTitle, data: content })
   }
 
-  const saveToDatabase = debounce(handleSaveToDatabase, 1000);
+  const saveToDatabase = debounce(handleSaveToDatabase, 500);
 
   return (
     <div className="max-w-5xl mx-auto px-1.5">
@@ -131,7 +111,7 @@ export default function Document() {
             });
           }}
         />
-       
+
         <Button
           onClick={() => {
             setIsClickedOnCopyurl(true);
@@ -151,7 +131,7 @@ export default function Document() {
         </Button>
       </div>
       <div className="absolute w-12 h-12 bg-blue-600 rounded-full bottom-6 right-6 p-2 shadow">
-        <Loader2 className={`w-full h-full text-white ${isSaving ? "animate-spin": ""}`} />
+        <Loader2 className={`w-full h-full text-white ${isSaving ? "animate-spin" : ""}`} />
       </div>
       <CKEditor
         editor={ClassicEditor}
