@@ -156,7 +156,7 @@ export default function Document() {
       <CKEditor
         editor={ClassicEditor}
         data={content ?? ""}
-        onChange={(event, editor) => {
+        onChange={(_, editor) => {
           const data = editor.getData();
           socket.emit("send-changes", data);
           setContent(data);
