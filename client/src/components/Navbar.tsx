@@ -29,7 +29,7 @@ const Navbar = () => {
   return (
     <header className="bg-zinc-50 ">
       <nav className="flex h-14  items-center justify-between p-5 w-full max-w-7xl mx-auto">
-        <Link to={"/"}>Do 📂</Link>
+        <Link to={"/"}>Google Doc</Link>
         <form
           onSubmit={handleSearchSubmit}
           className="hidden sm:flex items-stretch gap-2 md:w-full max-w-lg "

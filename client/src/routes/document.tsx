@@ -1,12 +1,12 @@
 import { socket } from "../socket.js";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import { Input } from "@/components/ui/input.js";
 import toast from "react-hot-toast";
-import { Check, Share } from "lucide-react";
+import { Check, Loader2, Share } from "lucide-react";
 import { Button } from "@/components/ui/button.js";
 
 interface SaveDocumentResponse {
@@ -21,13 +21,14 @@ export default function Document() {
   const [content, setContent] = useState<string | null>(null);
   const [url, setUrl] = useState("");
   const [isClickedOnCopyurl, setIsClickedOnCopyurl] = useState(false);
-  const prevContentRef = useRef(content);
+  const [isSaving, setIsSaving] = useState(false);
+
   const [documentTitle, setDocumentTitle] = useState(
     searchParams.get("title") ?? "",
   );
-  const prevTitleRef = useRef(documentTitle);
 
-  const [isSocketConnected, setIsSocketConnected] = useState(socket?.connected);
+
+  const [,setIsSocketConnected] = useState(socket?.connected);
   useEffect(() => {
     if (!socket) return;
     function onConnect() {
@@ -61,12 +62,9 @@ export default function Document() {
 
   useEffect(() => {
     function onSaveDocumentResponse(response: SaveDocumentResponse) {
-      console.log("received save:");
+      setIsSaving(false);
       if (response.isError) {
         toast.error("Something went wrong!");
-      }
-      if (response.isSuccess) {
-        toast.success("Successfully saved.");
       }
     }
 
@@ -74,32 +72,48 @@ export default function Document() {
     return () => { socket.off("save-document-response", onSaveDocumentResponse); }
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isSocketConnected) return;
-      if (
-        prevContentRef.current !== content ||
-        prevTitleRef.current !== documentTitle
-      ) {
-        console.log("emiited save:");
-        socket.emit("save-document", {
-          title: documentTitle ?? "Untitled",
-          data: content,
-        });
-        prevContentRef.current = content;
-        prevTitleRef.current = documentTitle;
-      }
-    }, 2500);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [content, documentTitle, isSocketConnected]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     if (!isSocketConnected) return;
+  //     if (
+  //       prevContentRef.current !== content ||
+  //       prevTitleRef.current !== documentTitle
+  //     ) {
+  //       console.log("emiited save:");
+  //       socket.emit("save-document", {
+  //         title: documentTitle ?? "Untitled",
+  //         data: content,
+  //       });
+  //       prevContentRef.current = content;
+  //       prevTitleRef.current = documentTitle;
+  //     }
+  //   }, 2500);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [content, documentTitle, isSocketConnected]);
 
   useEffect(() => {
     if (window) {
       setUrl(window.location.href);
     }
   }, []);
+
+  const debounce = function (cb: { (): void; (arg0: unknown[]): void; }, delay=1000) {
+    let timeout: NodeJS.Timeout | undefined;
+    return function (...args: unknown[]) {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        cb(args)
+      }, delay)
+    }
+  }
+  const handleSaveToDatabase = function () {
+    setIsSaving(true);
+    socket.emit("save-document", { title: documentTitle, data: content })
+  }
+
+  const saveToDatabase = debounce(handleSaveToDatabase, 1000);
 
   return (
     <div className="max-w-5xl mx-auto px-1.5">
@@ -117,6 +131,7 @@ export default function Document() {
             });
           }}
         />
+       
         <Button
           onClick={() => {
             setIsClickedOnCopyurl(true);
@@ -135,22 +150,17 @@ export default function Document() {
           )}
         </Button>
       </div>
-
-      <div className="prose max-w-5xl!">
-        {" "}
-
+      <div className="absolute w-12 h-12 bg-blue-600 rounded-full bottom-6 right-6 p-2 shadow">
+        <Loader2 className={`w-full h-full text-white ${isSaving ? "animate-spin": ""}`} />
       </div>
       <CKEditor
         editor={ClassicEditor}
         data={content ?? ""}
-        onReady={(editor) => {
-          console.log("CKEditor5 React Component is ready to use!", editor);
-        }}
         onChange={(event, editor) => {
           const data = editor.getData();
           socket.emit("send-changes", data);
-          console.log(event);
           setContent(data);
+          saveToDatabase()
         }}
       />
     </div>

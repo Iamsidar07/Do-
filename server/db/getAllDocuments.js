@@ -1,7 +1,6 @@
 import Document from "../Schema/Document.js";
 
 export const getAllDocuments = async (userId, q, offset, limit) => {
-  console.log({ q, offset });
   try {
     if (!userId) return "Unauthorized";
     const documents = await Document.find({
@@ -11,7 +10,6 @@ export const getAllDocuments = async (userId, q, offset, limit) => {
       .skip(Number(offset ?? 0))
       .limit(Number(limit ?? 10))
       .sort({ updatedAt: -1 });
-    console.log(documents);
 
     return documents;
   } catch (error) {

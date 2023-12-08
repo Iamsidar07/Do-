@@ -29,7 +29,6 @@ app.get("/", (req, res) => {
 });
 
 app.get("/all", async (req, res) => {
-  console.log(req.url);
   const { userId, q, offset, limit } = req.query;
   const allDocuments = await getAllDocuments(userId, q, offset, limit);
   res.json({
@@ -65,9 +64,7 @@ io.on("connection", (socket) => {
     // Listen for save-document events to save document in the Database
     socket.on("save-document", async ({ data, title }) => {
       const response = await saveDocumentToDatabase(documentID, data, title);
-      console.log("receive");
       socket.emit("save-document-response", response);
-      console.log("send");
     });
   });
 });
