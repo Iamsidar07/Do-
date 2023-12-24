@@ -4,9 +4,9 @@ import { Doc } from "@/types/types";
 import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { INIFINITE_QUERY_LIMIT, baseUrl } from "@/config";
 
 dayjs.extend(relativeTime);
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -48,3 +48,8 @@ export async function deleteDocument(documentId: string) {
 export function convertToRelativeTime(date: Date): string {
   return dayjs(date).fromNow();
 }
+
+export function generateURL(userId: string, offset: number) {
+  return `${baseUrl}/all?userId=${userId}&offset=${offset}&limit=${INIFINITE_QUERY_LIMIT}`;
+}
+

@@ -1,4 +1,5 @@
-import Document from "../Schema/Document.js";
+import { LIMIT } from "../config/index.js";
+import Document from "../schema/Document.js";
 
 export const getAllDocuments = async (userId, q, offset, limit) => {
   try {
@@ -8,7 +9,7 @@ export const getAllDocuments = async (userId, q, offset, limit) => {
       title: { $regex: String(q ?? ""), $options: "i" },
     })
       .skip(Number(offset ?? 0))
-      .limit(Number(limit ?? 10))
+      .limit(Number(limit ?? LIMIT))
       .sort({ updatedAt: -1 });
 
     return documents;

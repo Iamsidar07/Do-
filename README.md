@@ -1,7 +1,9 @@
 # Google Doc Clone
+
 [Google doc clone](https://do-wine.vercel.app/) built with socket.io and mongodb in reactjs
 
 ## Tech Stack
+
 - Socket.io
 - Monogdb
 - Reactjs
@@ -11,6 +13,6 @@
 - Ckeditor
 - React Query
 
-## preview 
-![Google doc clone preview](/preview.png)
+## preview
 
+![Google doc clone preview](/preview.png)

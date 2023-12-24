@@ -53,12 +53,11 @@ io.on("connection", (socket) => {
   socket.on("get-document", async ({ documentID, userID, title }) => {
     const doc = await findOrCreateDocument(documentID, userID, title);
     socket.join(documentID);
-    socket.emit("load-document", doc?.data);
+    socket.emit("load-document", doc);
     // Listen for send-changes event from client.
     socket.on("send-changes", (delta) => {
       // Broadcast changes to everyone except for us.
       socket.broadcast.to(documentID).emit("receive-changes", delta);
-      // socket.broadcast.emit("receive-changes", delta);
     });
 
     // Listen for save-document events to save document in the Database

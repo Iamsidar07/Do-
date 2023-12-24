@@ -5,7 +5,7 @@ import { Input } from "../components/ui/input";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { getAllDocuments } from "@/lib/utils";
+import { generateURL, getAllDocuments } from "@/lib/utils";
 
 import { Loader, PlusIcon } from "lucide-react";
 import axios from "axios";
@@ -55,8 +55,7 @@ export default function Root() {
     queryKey: ["documents", userId],
     queryFn: async ({ pageParam = 0 }) => {
       const offset = pageParam ? pageParam : 0;
-      const url = `${import.meta.env.VITE_API_BASE_URL
-        }/all?userId=${userId}&offset=${offset}&limit=${INIFINITE_QUERY_LIMIT}`;
+      const url = generateURL(userId ?? "", offset);
       const data = await axios.get(url);
       return {
         results: data.data.results,
@@ -137,7 +136,7 @@ export default function Root() {
               <p>Create your first doc...</p>
             </div>
           ) : null}
-          {error ? (
+          {error && !isLoading ? (
             <div>
               <h2>Oops! Something went wrong!</h2>
               <p>

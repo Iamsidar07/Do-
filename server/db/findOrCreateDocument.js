@@ -1,4 +1,4 @@
-import Document from "../Schema/Document.js";
+import Document from "../schema/Document.js";
 
 const DEFAULT_VALUE = "Start typing ...";
 
